@@ -48,8 +48,11 @@ jobs:
                 whoami
                 hostname
                 pwd
+                
+                
+                ls -a
 
-                cd /home/devops-learnig
+                cd /home/devops-learning
 
                 git fetch origin main
                 git checkout main
