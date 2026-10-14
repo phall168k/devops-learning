@@ -44,7 +44,7 @@ jobs:
             port: ${{ secrets.SSH_PORT }}
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script: |
-                echo "Connected successfullyaadafsgeGFDSAESGDTEGFTEFTEDTEGFYREH!"
+                echo "Connected successfullyaadafsgeGFDSAESGDTEGFTEFTEDTEGFYREH!sdfgghdstfgfgtedghtefftegmfey"
                 whoami
                 hostname
                 pwd
