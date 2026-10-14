@@ -52,7 +52,7 @@ jobs:
                 
                 ls -a
 
-                cd /home/devops-learning
+                cd devops-learning
 
                 git fetch origin main
                 git checkout main
