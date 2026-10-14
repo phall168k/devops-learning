@@ -49,7 +49,7 @@ jobs:
                 hostname
                 pwd
 
-                cd /home/deploy/devops-learnig
+                cd /home/devops-learnig
 
                 git fetch origin main
                 git checkout main
