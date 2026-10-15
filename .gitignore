@@ -1,7 +1,15 @@
 # compiled output
-/dist
-/node_modules
-/build
+dist/
+node_modules/
+build/
+*.tsbuildinfo
+
+# Nuxt generated files and output
+.nuxt/
+.output/
+.data/
+.nitro/
+.cache/
 
 # Logs
 logs
@@ -16,8 +24,8 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
-/.nyc_output
+coverage/
+.nyc_output/
 
 # IDEs and editors
 /.idea
@@ -37,10 +45,11 @@ lerna-debug.log*
 
 # dotenv environment variable files
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
 
 # temp directory
 .temp
