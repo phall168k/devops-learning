@@ -137,7 +137,8 @@ volumes:
   devop_postgres_data:
   npm_postgres_prod_data:
   npm_prod_data:
-  
+  npm_prod_letsencrypt:
+
 networks:
   internal_network:
     driver: bridge
