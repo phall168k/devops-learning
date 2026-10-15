@@ -44,7 +44,7 @@ jobs:
             # port: ${{ secrets.SSH_PORT }}
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script: |
-                echo "Connected successfullyaadafsgeGFDSAESGDTEGFTEFTEDTEGFYREH!sdfgghdstfgfgtedghtefftegmfey"
+                echo "Connected successfully hehehaha"
                 whoami
                 hostname
                 pwd
@@ -60,4 +60,4 @@ jobs:
 
                 docker ps
 
-                echo "Deployment completed successfully........................"
+                echo "Deployment completed successfully."
