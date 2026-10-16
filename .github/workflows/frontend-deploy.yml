@@ -1,0 +1,119 @@
+name: Frontend CI/CD
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - "frontend/**"
+            - ".github/workflows/frontend-deploy.yml"
+
+    push:
+        branches:
+            - main
+        paths:
+            - "frontend/**"
+            - ".github/workflows/frontend-deploy.yml"
+
+permissions:
+    contents: read
+
+concurrency:
+    group: frontend-cicd-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+    ci:
+        name: Build
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        defaults:
+            run:
+                working-directory: frontend
+        
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                persist-credentials: false
+
+            - name: Setup Node.s
+              uses: actions/setup-node@v4
+              with:
+                node-version: 22
+                cache: npm
+                cache-dependency-path: frontend/package-lock.json
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Build
+              run: npm run build
+
+    docker:
+        name: Build and Push Frontend
+        needs: ci
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                persist-credentials: false
+
+            - name: Get short SHA
+              id: vars
+              run: echo "short_sha=${GITHUB_SHA::5}" >> "$GITHUB_OUTPUT"
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v4
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@v4
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+            
+            - name: Build and Push Frontend image
+              uses: docker/build-push-action@v7
+              with:
+                context: ./frontend
+                file: ./frontend/Dockerfile.prod
+                push: true
+                tags: |
+                    ${{ secrets.DOCKERHUB_USERNAME }}/devops-learning-frontend:latest
+                    ${{ secrets.DOCKERHUB_USERNMAE }}/devops-learning-frontend:${{  steps.vars.outputs.short_sha }}
+                cache-from: type=sha
+                cache-to: type=gha,mode=max
+
+    deploy:
+        name: Deploy Frontend
+        needs: docker
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Deploy frontend via SSH
+              uses: apployboy/ssh-action@v1.2.5
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
+                port: ${{ secrets.SSH_PORT }}
+                command_timeout: 10m
+                script: |
+                    set -e
+
+                    cd "$HOME/devops-learning"
+
+                    docker compose -f docker-compose.yml pull devop-nuxt-prod
+
+                    docker compose -f docker-compose.yml up -d devop-nuxt-prod
+
+                    docker image prune -f
+
+                    docker compose -f docker-compose.yml ps
