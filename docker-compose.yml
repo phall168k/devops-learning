@@ -52,7 +52,7 @@ services:
 
 # Nuxt APP
   devop-nuxt-prod:
-    image: phall168k/devops-learning-backend:latest
+    image: phall168k/devops-learning-frontend:latest
     container_name: devop-nuxt-prod
     env_file:
       - ./frontend/.env
