@@ -85,9 +85,9 @@ jobs:
                 push: true
                 tags: |
                     ${{ secrets.DOCKERHUB_USERNAME }}/devops-learning-frontend:latest
-                    ${{ secrets.DOCKERHUB_USERNMAE }}/devops-learning-frontend:${{ steps.vars.outputs.short_sha }}
+                    ${{ secrets.DOCKERHUB_USERNAME }}/devops-learning-frontend:${{ steps.vars.outputs.short_sha }} 
                 cache-from: type=sha
-                cache-to: type=gha,mode=max
+                cache-to: type=gha,mode=max 
 
     deploy:
         name: Deploy Frontend
@@ -106,7 +106,7 @@ jobs:
                 port: ${{ secrets.SSH_PORT }}
                 command_timeout: 10m
                 script: |
-                    set -e
+                    set -eu
 
                     cd "$HOME/devops-learning"
 
