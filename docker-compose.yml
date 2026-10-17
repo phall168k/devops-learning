@@ -88,8 +88,8 @@ services:
     ports:
       - "80:80"
     environment:
-      NGINX_SERVER_NAME: "${NGINX_SERVER_NAME:-}"
-      NGINX_CLIENT_BODY_MAX_SIZE: "${NGINX_CLIENT_BODY_MAX_SIZE:100M}"
+      NGINX_SERVER_NAME: "${NGINX_SERVER_NAME:-_}"
+      NGINX_CLIENT_BODY_MAX_SIZE: "${NGINX_CLIENT_BODY_MAX_SIZE:-100M}"
       NGINX_ENVSUBST_FILTER: "^(NGINX_SERVER_NAME|NGINX_CLIENT_BODY_MAX_SIZE)$$"
     volumes:
       - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
