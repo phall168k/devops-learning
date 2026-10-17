@@ -86,8 +86,8 @@ jobs:
                 tags: |
                     ${{ secrets.DOCKERHUB_USERNAME }}/devops-learning-frontend:latest
                     ${{ secrets.DOCKERHUB_USERNAME }}/devops-learning-frontend:${{ steps.vars.outputs.short_sha }} 
-                cache-from: type=sha
-                cache-to: type=gha,mode=max 
+                cache-from: type=gha,scope=frontend
+                cache-to: type=gha,mode=max,scope=frontend
 
     deploy:
         name: Deploy Frontend
