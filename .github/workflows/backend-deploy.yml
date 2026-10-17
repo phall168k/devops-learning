@@ -109,7 +109,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 10m
           script: |
-            set -e
+            set -eu
 
             cd "$HOME/devops-learning"
 

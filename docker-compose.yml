@@ -80,64 +80,25 @@ services:
     networks:
       - internal_network
     restart: unless-stopped
-
-  # Nginx Proxy manager database
-  nginx-proxy-db-prod:
-    image: postgres:16-alpine
-    container_name: nginx-proxy-db-prod
-    environment:
-      POSTGRES_USER: ${PROXY_DB_USERNAME}
-      POSTGRES_PASSWORD: ${PROXY_DB_PASSWORD}
-      POSTGRES_DB: ${PROXY_DB_DATABASE}
-      TZ: ${DB_TZ}
-      PGTZ: ${DB_PGTZ}
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    volumes:
-      - npm_postgres_prod_data:/var/lib/postgresql/data
-    networks:
-      - internal_network
-    restart: unless-stopped
-
-  # Nginx Proxy manager
-  nginx-proxy-manager-prod:
-    image: 'jc21/nginx-proxy-manager:2.15.1'
-    container_name: nginx-proxy-manager-prod
-    environment:
-      TZ: ${DB_TZ}
-      DB_POSTGRES_HOST: ${PROXY_DB_HOST}
-      DB_POSTGRES_PORT: ${PROXY_DB_PORT}
-      DB_POSTGRES_USER: ${PROXY_DB_USERNAME}
-      DB_POSTGRES_PASSWORD: ${PROXY_DB_PASSWORD}
-      DB_POSTGRES_NAME: ${PROXY_DB_DATABASE}
+    
+  # Nginx
+  devop-nginx-prod:
+    image: nginx:1.27-alpine
+    container_name: devop-nginx-prod
     ports:
-      - "8080:80"
-      - "81:81"
-      - "443:443"
+      - "80:80"
     volumes:
-      - npm_prod_data:/data
-      - npm_prod_letsencrypt:/etc/letsencrypt
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - devop-nuxt-prod
-      - nginx-proxy-db-prod
+      devop-nuxt-prod:
+        condition: service_healthy
     networks:
       - internal_network
       - external_network
     restart: unless-stopped
-    
+
 volumes:
   devop_postgres_data:
-  npm_postgres_prod_data:
-  npm_prod_data:
-  npm_prod_letsencrypt:
 
 networks:
   internal_network:
