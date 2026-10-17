@@ -113,6 +113,10 @@ jobs:
 
             cd "$HOME/devops-learning"
 
+            git checkout main
+
+            git pull --ff-only origin main
+
             docker compose -f docker-compose.yml pull devop-nest-prod
 
             docker compose -f docker-compose.yml up -d devop-nest-prod

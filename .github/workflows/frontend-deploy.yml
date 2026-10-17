@@ -110,6 +110,10 @@ jobs:
 
                     cd "$HOME/devops-learning"
 
+                    git checkout main
+
+                    git pull --ff-only origin main
+
                     docker compose -f docker-compose.yml pull devop-nuxt-prod
 
                     docker compose -f docker-compose.yml up -d devop-nuxt-prod
